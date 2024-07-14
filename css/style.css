@@ -5,6 +5,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  overflow: hidden; /* Bloquer le scroll vertical et horizontal */
 }
 
 #playButton {
@@ -47,5 +48,5 @@ body {
 }
 
 .over {
-  outline: 2px solid #f00;
+  /* Suppression de la bordure rouge */
 }

@@ -58,6 +58,8 @@ function touchMove(e) {
     e.preventDefault();
     const touch = e.touches[0];
     const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    // Retirer la bordure rouge pour tous les éléments
+    document.querySelectorAll('.cell img').forEach(img => img.classList.remove('over'));
     if (element && element.tagName === 'IMG' && element !== dragSrcElement) {
         element.classList.add('over');
     }
