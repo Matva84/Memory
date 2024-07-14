@@ -22,6 +22,9 @@ function startGame() {
         img.src = src;
         img.draggable = true;
         img.addEventListener('dragstart', dragStart);
+        img.addEventListener('touchstart', touchStart, { passive: true });
+        img.addEventListener('touchmove', touchMove, { passive: true });
+        img.addEventListener('touchend', touchEnd);
         cell.appendChild(img);
         gameBoard.appendChild(cell);
     });
@@ -44,6 +47,41 @@ function dragStart(e) {
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', e.target.src);
     setTimeout(() => this.classList.add('hidden'), 0);
+}
+
+function touchStart(e) {
+    dragSrcElement = e.target;
+    e.target.classList.add('hidden');
+}
+
+function touchMove(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (element && element.tagName === 'IMG' && element !== dragSrcElement) {
+        element.classList.add('over');
+    }
+}
+
+function touchEnd(e) {
+    const touch = e.changedTouches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (element && element.tagName === 'IMG' && dragSrcElement) {
+        if (dragSrcElement.src === element.src) {
+            dragSrcElement.parentElement.innerHTML = '';
+            element.parentElement.innerHTML = '';
+        } else {
+            dragSrcElement.classList.remove('hidden');
+            const dragSrcParent = dragSrcElement.parentElement;
+            const targetParent = element.parentElement;
+            const temp = document.createElement('div');
+            targetParent.replaceChild(temp, element);
+            dragSrcParent.replaceChild(element, dragSrcElement);
+            targetParent.replaceChild(dragSrcElement, temp);
+        }
+    }
+    document.querySelectorAll('.over').forEach(el => el.classList.remove('over'));
+    checkWin();
 }
 
 document.getElementById('gameBoard').addEventListener('dragover', (e) => {
@@ -77,10 +115,10 @@ function dragEnd(e) {
 }
 
 let timer;
-let timeLeft = 60;
+let timeLeft = 30;
 
 function startTimer() {
-    timeLeft = 60;
+    timeLeft = 30;
     document.getElementById('time').textContent = timeLeft;
     clearInterval(timer);
     timer = setInterval(() => {
