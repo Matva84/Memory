@@ -22,6 +22,7 @@ function startGame() {
         img.src = src;
         img.draggable = true;
         img.addEventListener('dragstart', dragStart);
+        img.addEventListener('click', (e) => e.preventDefault()); // Empêche l'action par défaut sur le clic
         img.addEventListener('touchstart', touchStart, { passive: true });
         img.addEventListener('touchmove', touchMove, { passive: true });
         img.addEventListener('touchend', touchEnd);
